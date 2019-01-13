@@ -4,6 +4,7 @@ import sys
 #command line args contain any number of txt files, each for an album
 #lines in text file are in order: mp3filename, artist, album, year, tracks(ordered)
 #starttime 12:21 trackname
+album = 1
 files = sys.argv[1:]
 print(files)
 def split(txt):
@@ -22,7 +23,7 @@ def split(txt):
         title = ' '.join(songdata[1:])
         starttime = 1000*(int((songdata[0].split(':'))[0])*60 + int((songdata[0].split(':'))[1]))
         meta = {'artist':artist, 'album':album, 'title':title, 'year':year, 'track':tracknumber}
-        print("a\n")
+        print("Processing track "+str(tracknumber)+"\n")
         currtrack = musicfile[starttime:]
         musicfile = musicfile[:starttime]
 
@@ -30,7 +31,11 @@ def split(txt):
         tracknumber -= 1
 
 for txtfile in files:
-    with open(txtfile,'r') as currfile:
-        data = currfile.read().splitlines()
-        print("a\n")
-    split(data)
+    try:
+        with open(txtfile,'r') as currfile:
+            data = currfile.read().splitlines()
+            print("Processing album "+str(album)+"\n")
+            album+=1
+            split(data)
+    except IOError:
+        print("IOError")
